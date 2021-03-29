@@ -180,7 +180,8 @@ target_out_dir_opt(Dir, Opts) ->
   lists:keystore(out_dir, 1, Opts, {out_dir, Dir}).
 
 write_sheet_module_file(ModuleFiles, FileName) ->
-  ensure_dir(filename:dirname(FileName)),
+  ok = filelib:ensure_dir(filename:dirname(FileName)),
+  rebar_api:debug("ensure_dir: ~p", [FileName]),
   {ok, Fd} = file:open(FileName, [write, binary]),
   ModuleFiles2 = [filename:rootname(filename:basename(ModuleFile)) || ModuleFile <- ModuleFiles],
   io:format(Fd, "[\n~s\n].", [string:join(ModuleFiles2, ",\n")]),
